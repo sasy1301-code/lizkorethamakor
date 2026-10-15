@@ -192,7 +192,7 @@ button{font-family:inherit;cursor:pointer;color:inherit}
 .verdict .word{text-align:center;font:400 15px var(--f-ui);color:#fff}
 .chk{list-style:none;margin:0;padding:0;display:grid;gap:5px}
 .chk li{display:flex;justify-content:space-between;background:#0003;border-radius:12px;padding:4px 12px;font:300 13px var(--f-ui)}
-.ok{color:var(--good)} .no{color:var(--bad);display:inline-flex;align-items:center;gap:5px}
+.ok{color:var(--good)} .ok.nc{opacity:.75} .ok small{font-size:10px;color:var(--cream);opacity:.8} .no{color:var(--bad);display:inline-flex;align-items:center;gap:5px}
 .xic{display:inline-block;width:.8em;height:.8em;background:currentColor;-webkit-mask:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAACL0lEQVR4nN2arU4DQRSFv24qEBWICh6BBMQ+AA+AqFiBWIHgEfYRKnkHKnHUgUBgGuqBBEPapAISBKBaBwmInYUJWWbnZ7ezw0mOavfcM52d2ztzB9ToAofAOfAMfAIvwA1wDMQVz+sgFlo3QvtTxDoXsbu2wgNgJgRVPAP6Fvp98WyV/kx40UYPONEQlrkAtg1i7AKPhjFOgI0q4S3g2lC44BLY0zC/J75rE+Ma2PxLuOdgXh5EojCfOJiXB9ErEx85Chd8B9IS/VR8VkeM0W/xQU3CMjNJP2tA/3thd9HLNjYcCjahPRPeSRsKsA6mEXBEuDjskGeF0lUdAFYd8qkIFhHw4duEA94i4MG3Cwc8RcCVbxcOuIS8nPWdDm0ZFyMZt8CMKcfyVPQxL299ckHJHmQX90pxHVyi2Hu41OrrMl+550ior+ytk+8YbC3bWOAd6JovkLXAdMHM1HyBYQvMD1UGI9uRhYAM/7++9SvUxkVcdlBQioT2ptGkynzQf2RBlxLBF3NBl9NxC8zYMg79XCjtAPfAjm8nlrjrkOdX6zaOZ7z+i4OtlW8TDlhFwMS3CwdMIuDUtwsHnEK+gOc0k6eHNLcpmiMlnxBbTPu/p6POJl/ZBrzRJh/kTY6po/AS9dFHgnvFO0XR8N50GMQ6Gt1TFI3uAj3MX6cFzV81GKFx1UDGAL3sNMb+sodOGT/H8LKHjC754rvgZ9pfgVvqv25zK7SL1/FCxFbWaV9fOdfUG61fhwAAAABJRU5ErkJggg==") center/contain no-repeat;mask:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAACL0lEQVR4nN2arU4DQRSFv24qEBWICh6BBMQ+AA+AqFiBWIHgEfYRKnkHKnHUgUBgGuqBBEPapAISBKBaBwmInYUJWWbnZ7ezw0mOavfcM52d2ztzB9ToAofAOfAMfAIvwA1wDMQVz+sgFlo3QvtTxDoXsbu2wgNgJgRVPAP6Fvp98WyV/kx40UYPONEQlrkAtg1i7AKPhjFOgI0q4S3g2lC44BLY0zC/J75rE+Ma2PxLuOdgXh5EojCfOJiXB9ErEx85Chd8B9IS/VR8VkeM0W/xQU3CMjNJP2tA/3thd9HLNjYcCjahPRPeSRsKsA6mEXBEuDjskGeF0lUdAFYd8qkIFhHw4duEA94i4MG3Cwc8RcCVbxcOuIS8nPWdDm0ZFyMZt8CMKcfyVPQxL299ckHJHmQX90pxHVyi2Hu41OrrMl+550ior+ytk+8YbC3bWOAd6JovkLXAdMHM1HyBYQvMD1UGI9uRhYAM/7++9SvUxkVcdlBQioT2ptGkynzQf2RBlxLBF3NBl9NxC8zYMg79XCjtAPfAjm8nlrjrkOdX6zaOZ7z+i4OtlW8TDlhFwMS3CwdMIuDUtwsHnEK+gOc0k6eHNLcpmiMlnxBbTPu/p6POJl/ZBrzRJh/kTY6po/AS9dFHgnvFO0XR8N50GMQ6Gt1TFI3uAj3MX6cFzV81GKFx1UDGAL3sNMb+sodOGT/H8LKHjC754rvgZ9pfgVvqv25zK7SL1/FCxFbWaV9fOdfUG61fhwAAAABJRU5ErkJggg==") center/contain no-repeat}
 
 /* ---- trophy celebration ---- */
@@ -660,9 +660,11 @@ function check(pass){
   if(okN) setTimeout(celebrate,1000);
   setTimeout(()=>beep(okN?[660,880,1100]:pts?[520,660]:[300,220],.12),350);
   const word=pass?"עברת על הקלף":okN?(T.bonus?`מקור מדויק! ניקוד כפול + בונוס ${T.bonus}`:"מקור מדויק! הקלף שלך – ניקוד כפול"):pts===3?"ספר, הלכות ופרק נכונים":pts===2?"ספר והלכות נכונים":pts===1?"הספר נכון":"לא הפעם";
-  const row=(l,y,ok,r)=>`<li><span>${l}: ${y||"—"}</span><span class="${ok?"ok":"no"}">${ok?"✓":`<i class="xic" aria-label="טעות"></i>${r}`}</span></li>`;
+  // each answer is judged on its own (✓ if it matches the card); points still follow the order book → hilchot → chapter → siman
+  const row=(l,y,right,counted,r)=>`<li><span>${l}: ${y||"—"}</span>${right?`<span class="ok${counted?"":" nc"}">✓${counted?"":" <small>לא נספר</small>"}</span>`:`<span class="no"><i class="xic" aria-label="טעות"></i>${r}</span>`}</li>`;
+  const rB=!pass&&ans.book===cb, rH=!pass&&ans.h===c.h, rP=rH&&ans.p===c.p, rN=rP&&ans.n===c.n;
   $("#picker").innerHTML=`<div class="verdict"><div class="gold"><bdi dir="ltr">+${pts}</bdi></div><div class="word">${word}</div>
-   <ul class="chk">${row("ספר",ans.book!=null&&TOC[ans.book].name.replace(/^ספר /,""),okB,TOC[cb].name.replace(/^ספר /,""))}${row("הלכות",ans.h&&ans.h.replace(/^הלכות /,""),okH,c.h.replace(/^הלכות /,""))}${row("פרק",ans.p&&ger(ans.p),okP,ger(c.p))}${row("סימן",ans.n&&ger(ans.n),okN,ger(c.n))}</ul>
+   <ul class="chk">${row("ספר",ans.book!=null&&TOC[ans.book].name.replace(/^ספר /,""),rB,okB,TOC[cb].name.replace(/^ספר /,""))}${row("הלכות",ans.h&&ans.h.replace(/^הלכות /,""),rH,okH,c.h.replace(/^הלכות /,""))}${row("פרק",ans.p&&ger(ans.p),!pass&&ans.p===c.p&&(ans.h===c.h),okP,ger(c.p))}${row("סימן",ans.n&&ger(ans.n),!pass&&ans.n===c.n&&ans.h===c.h,okN,ger(c.n))}</ul>
    <div class="actions"><button class="pill" data-act="next">${idx+1<deck.length?"הקלף הבא":"לסיכום"}</button></div></div>`;
 }
 /* ---------- the card becomes a trophy ----------
